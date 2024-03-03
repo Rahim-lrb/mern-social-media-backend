@@ -28,8 +28,7 @@ exports.createPost = async (req, res) => {
 
         res.status(201).json(newPost);
     } catch (err) {
-        console.error("Error creating post:", err);
-        res.status(500).json({ message: "Error creating post." });
+        res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error creating a post" })
     }
 };
 
@@ -50,7 +49,7 @@ exports.getAllPosts = async (req, res) => {
         res.status(200).json(posts);
         
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error creating a post" })
     }
 };
 
@@ -65,7 +64,7 @@ exports.getPostById = async (req, res) => {
         }
         res.status(200).json(post);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error creating a post" })
     }
 };
 
@@ -147,8 +146,7 @@ exports.likePost = async (req, res) => {
             return res.status(400).json({ message: "User already liked the post" }); // If user already liked the post, return error
         }
     } catch (error) {
-        console.error("Error liking post:", error);
-        res.status(500).json({ message: "Error liking post" });
+        res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error liking the post" })
     }
 };
 
@@ -172,30 +170,10 @@ exports.unlikePost = async (req, res) => {
 
         res.status(200).json(updatedPost);
     } catch (error) {
-        console.error("Error unliking post:", error);
-        res.status(500).json({ message: "Error unliking post" });
+        res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error unliking the post" })
     }
 };
 
-
-exports.getPostsByUserId = async (req, res) => {
-    console.log("posts user")
-    const { userId } = req.params;
-    console.log(userId)
-
-    try {
-        const posts = await Post.find({ user: userId });
-
-        if (!posts) {
-            return res.status(404).json({ message: 'Posts not found for the user' });
-        }
-
-        res.status(200).json(posts);
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        res.status(500).json({ message: 'Error fetching posts' });
-    }
-};
 exports.getPostsByUserId = async (req, res) => {
     console.log("posts user");
     const { userId } = req.params;
@@ -218,7 +196,6 @@ exports.getPostsByUserId = async (req, res) => {
 
         res.status(200).json(posts);
     } catch (error) {
-        console.error('Error fetching posts:', error);
-        res.status(500).json({ message: 'Error fetching posts' });
+        res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error posts by user id" })
     }
 };

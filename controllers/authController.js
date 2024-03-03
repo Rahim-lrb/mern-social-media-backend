@@ -3,9 +3,9 @@ const User = require('../models/userModel')
 const { createToken, verifyToken } = require("../utils/Token")
 const { hashData } = require("../utils/hashData")
 const cloudinary = require("../utils/cloudinary")
+const errorResponse = require("../utils/errorResponse")
 
-
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   console.log("login")
   const {email, password} = req.body
   console.log(email, password)
@@ -23,7 +23,8 @@ const loginUser = async (req, res) => {
     .cookie("token", token, options)
     .json({email, token})
   } catch (error) {
-    res.status(400).json({error: error.message})
+    res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
+    // next(new errorResponse("invalid password", 401))
   }
 }
 
@@ -61,9 +62,7 @@ const signupUser = async (req, res, next) => {
     };
     res.status(200).cookie("token", token, options).json({ user: newUser, token });
   } catch (error) {
-    // Pass error to error handling middleware
-    console.log(error)
-    next(error);
+    res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
   }
 };
 
@@ -81,7 +80,7 @@ const logout = async (req, res) => {
       data: {}
     });
     } catch (err) {
-      res.status(400).json({error: err.message})
+      res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
     }
 }
 

@@ -27,8 +27,4 @@ router.post("/unlike", postControllers.unlikePost)
 router.get("/user/:userId", postControllers.getPostsByUserId)
 
 
-
-
-
-
 module.exports = router;

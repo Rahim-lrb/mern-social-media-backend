@@ -23,8 +23,6 @@ const morgan = require("morgan")
 const authRouter = require('./routes/auth')
 const userRouter = require('./routes/user')
 const postRouter = require('./routes/post');
-// const commentRouter = require('./routes/comment');
-// const likeRouter = require('./routes/like');
 
 const { forgetPassword, resetPassword } = require("./controllers/authController")
 const { protect, authorize } = require("./middleware/protect")
@@ -42,13 +40,12 @@ app.use(express.json());
 app.use((req, res, next) => { console.log(req.path, req.method); next()})
 app.use(cors({ origin: true, credentials: true }))
 app.use(cookieParser()); // enable using cookies
-// app.use(fileupload()); // File uploading
 
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev')); // shows details about the request without console.log, use it only in development
+    app.use(morgan('dev'));
 }
 // security
-app.use(mongoSanitize()); // Sanitize data to stop  NoSQL Injection attacks
+app.use(mongoSanitize());
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 mins
     max: 100
@@ -65,9 +62,8 @@ app.use(xss()); // Prevent XSS attacks
 
 // routes usage
 app.get('/', (req, res) => {
-    res.send("welcome")
+    res.send("welcome to wex social media backend")
 })
-// app.use('/api/workouts', protect, authorize("user", "admin") , workoutRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/users', userRouter)
 app.use('/api/posts', postRouter)
@@ -75,6 +71,8 @@ app.use('/api/posts', postRouter)
 // app.use('/api/likes', likeRouter)
 
 
+
+app.use(errorHandling)
 
 
 

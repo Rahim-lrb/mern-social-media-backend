@@ -1,12 +1,5 @@
 const User = require('../models/userModel');
-
-
-exports.getMe = async (req, res) => {
-  console.log('me')
-  const user = req.currentUser;
-  res.json({ user });
-}
-
+const errorResponse = require("../utils/errorResponse")
 
 
 // Get user by ID from the token
@@ -24,7 +17,7 @@ exports.getUserById = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
   }
 };
 
@@ -40,7 +33,7 @@ exports.updateUserById = async (req, res) => {
     }
     res.status(200).json(updatedUser);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+      res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
   }
 };
 
@@ -55,7 +48,7 @@ exports.deleteUserById = async (req, res) => {
     }
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
   }
 };
 
@@ -65,6 +58,6 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
   }
 }
