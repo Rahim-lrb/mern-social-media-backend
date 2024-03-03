@@ -6,7 +6,8 @@ const { protect } = require("../middleware/protect")
 
 
 router.get('/', userControllers.getAllUsers);
-router.get('/:userId', protect, userControllers.getUserById);
+router.get('/me', protect, userControllers.getUserById);
+
 router.put('/:userId', userControllers.updateUserById);
 router.delete('/:userId', userControllers.deleteUserById);
 module.exports = router;
