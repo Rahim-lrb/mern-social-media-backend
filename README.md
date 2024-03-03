@@ -21,7 +21,6 @@ Explore the project live [here](https://wex-backend.onrender.com/)!
 - Node.js
 - Express.js
 - MongoDB
-- Mongoose ODM
 - JSON Web Tokens (JWT) for authentication
 - bcryptjs for password hashing
 - Multer for handling file uploads (for profile pictures, post images, etc.)
