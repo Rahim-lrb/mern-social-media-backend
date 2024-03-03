@@ -29,7 +29,7 @@ const protect = async (req, res, next) => {
         }
         // Attach the user information to the req object so it can be used in 
         req.currentUser = user;
-        console.log("Authenticated User:", req.currentUser);
+        // console.log("Authenticated User:", req.currentUser);
         next();
     } catch (err) {
         return res.status(401).json({ error: 'Authorization failed. Invalid or expired token.' });

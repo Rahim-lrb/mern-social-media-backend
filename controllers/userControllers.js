@@ -1,24 +1,22 @@
 const User = require('../models/userModel');
 const errorResponse = require("../utils/errorResponse")
-
+const mongoose = require("mongoose")
 
 // Get user by ID from the token
 exports.getUserById = async (req, res) => {
-  console.log("get me")
-  try {
-    const { userId } = req.params;
-    console.log(userId)
+  console.log("get the currentUser");
+  console.log(req.currentUser._id);
 
-    // const user = await User.findById(userId);
+  try {
+    const userId = mongoose.Types.ObjectId(req.currentUser._id);
     const user = await User.findById(userId).populate('posts');
-    console.log(user)
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     res.status(200).json(user);
   } catch (error) {
-    res.status(error.statusCode || 500 ).json({ success: false, error: error.message || "server error" })
+    res.status(error.statusCode || 500).json({ success: false, error: error.message || "server error" });
   }
 };
 
