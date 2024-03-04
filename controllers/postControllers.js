@@ -92,30 +92,22 @@ exports.updatePostById = async (req, res) => {
 exports.deletePostById = async (req, res) => {
     console.log("delete post by id");
     const { postId } = req.params;
-    console.log( postId )
-
     try {
-        // Find the post to get the image URL
         const post = await Post.findById(postId);
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
 
-        // Delete the image from Cloudinary
         if (post.image) {
-            const publicId = post.image.split('/').pop().split('.')[0]; // Extract public_id from the image URL
-            await cloudinary.uploader.destroy(publicId); // Delete the image from Cloudinary
+            const publicId = post.image.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(publicId);
         }
 
-        // Delete the post
         const deletedPost = await Post.findByIdAndDelete(postId);
         if (!deletedPost) {
             return res.status(404).json({ message: "Post not found" });
         }
-
-        // Remove the post ID from the user's posts array
         await User.findByIdAndUpdate(deletedPost.user, { $pull: { posts: postId } });
-
         res.status(200).json(deletedPost);
     } catch (err) {
         if (err.name === 'CastError') {

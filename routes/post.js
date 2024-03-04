@@ -14,9 +14,9 @@ router.route('/')
     .post(upload.single("file") ,postControllers.createPost)
 
 router.route('/:postId')
-.get(postControllers.getPostById)
-.put(postControllers.updatePostById)
-.delete(postControllers.deletePostById);
+    .get(postControllers.getPostById)
+    // .put(postControllers.updatePostById)
+    .delete(postControllers.deletePostById);
 
 router.post('/:postId/like', postControllers.likePost);
 
