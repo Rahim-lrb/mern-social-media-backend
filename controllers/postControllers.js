@@ -173,29 +173,32 @@ exports.unlikePost = async (req, res) => {
         res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error unliking the post" })
     }
 };
-
 exports.getPostsByUserId = async (req, res) => {
     console.log("posts user");
     const { userId } = req.params;
     console.log(userId);
 
     try {
-        const posts = await Post.find().populate({ 
-            path: 'comments', 
-            options: { sort: { createdAt: -1 } },
-            populate: { 
-                path: 'user'
-            } 
-        }).populate({ 
-            path: 'user' 
-        }).populate('likes').sort({ createdAt: -1 });
+        const posts = await Post.find({ user: userId }) // Filter posts by user ID
+            .populate({ 
+                path: 'comments', 
+                options: { sort: { createdAt: -1 } },
+                populate: { 
+                    path: 'user'
+                } 
+            })
+            .populate({ 
+                path: 'user' 
+            })
+            .populate('likes')
+            .sort({ createdAt: -1 });
 
-        if (!posts) {
+        if (!posts || posts.length === 0) {
             return res.status(404).json({ message: 'Posts not found for the user' });
         }
 
         res.status(200).json(posts);
     } catch (error) {
-        res.status(err.statusCode || 500 ).json({ success: false, error: error.message || "error posts by user id" })
+        res.status(500).json({ success: false, error: "Error fetching posts by user ID" });
     }
 };
