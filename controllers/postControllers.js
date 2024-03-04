@@ -92,6 +92,7 @@ exports.updatePostById = async (req, res) => {
 exports.deletePostById = async (req, res) => {
     console.log("delete post by id");
     const { postId } = req.params;
+    console.log( postId )
 
     try {
         // Find the post to get the image URL
