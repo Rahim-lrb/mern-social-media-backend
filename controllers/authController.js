@@ -59,7 +59,9 @@ const signupUser = async (req, res, next) => {
     const options = {
       expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
       httpOnly: false,
-      secure: true
+      secure: true,
+      sameSite: 'None' // Set SameSite attribute to None
+
     };
     res.status(200).cookie("token", token, options).json({ user: newUser, token });
   } catch (error) {
@@ -74,7 +76,9 @@ const logout = async (req, res) => {
     res.cookie('token', 'none', {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: false,
-      secure: true
+      secure: true,
+      sameSite: 'None' // Set SameSite attribute to None
+
     });
   
     res.status(200).json({
