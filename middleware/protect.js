@@ -13,23 +13,23 @@ const protect = async (req, res, next) => {
     const tokenFromBearerHeader = authorizationHeader && authorizationHeader.startsWith('Bearer ') ? authorizationHeader.split(' ')[1] : null;
 
     const token = tokenFromBody || tokenFromQuery || tokenFromHeader || tokenFromBearerHeader || tokenFromCookie;
+    console.log(req.cookies.token)
     console.log(token)
     try {
         if (!token) {
+            console.log("no token")
             throw new Error('Authentication token is required');
+        } else {
+            console.log("a token")
         }
-
         const decoded = await verifyToken(token, process.env.TOKEN_KEY);
-
         // Fetch the user from the database using the email obtained from the decoded token
         const user = await User.findOne({ email: decoded.email });
-
         if (!user) {
             throw new Error('User not found');
         }
         // Attach the user information to the req object so it can be used in 
         req.currentUser = user;
-        // console.log("Authenticated User:", req.currentUser);
         next();
     } catch (err) {
         return res.status(401).json({ error: 'Authorization failed. Invalid or expired token.' });
