@@ -58,7 +58,8 @@ const signupUser = async (req, res, next) => {
     // Set cookie with token and send user data along with token in response
     const options = {
       expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
-      httpOnly: true
+      httpOnly: false,
+      secure: true
     };
     res.status(200).cookie("token", token, options).json({ user: newUser, token });
   } catch (error) {
@@ -72,7 +73,8 @@ const logout = async (req, res) => {
   try {
     res.cookie('token', 'none', {
       expires: new Date(Date.now() + 10 * 1000),
-      httpOnly: true
+      httpOnly: false,
+      secure: true
     });
   
     res.status(200).json({
